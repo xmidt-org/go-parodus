@@ -54,14 +54,19 @@ release-artifacts: go-mod-vendor
 	GOOS=windows GOARCH=amd64 $(GO) build -o ./.ignore/binaries/$(APP)-$(PROGVER).windows-amd64 -ldflags "-X 'main.BuildTime=$(BUILDTIME)' -X main.GitCommit=$(GITCOMMIT) -X main.Version=$(PROGVER)"
 	GOOS=windows GOARCH=386   $(GO) build -o ./.ignore/binaries/$(APP)-$(PROGVER).windows-386   -ldflags "-X 'main.BuildTime=$(BUILDTIME)' -X main.GitCommit=$(GITCOMMIT) -X main.Version=$(PROGVER)"
 
+	# cp  NOTICE LICENSE CHANGELOG.md
+	cp NOTICE       ./.ignore/binaries/
+	cp LICENSE      ./.ignore/binaries/
+	cp CHANGELOG.md ./.ignore/binaries/
+
 	# Create tars
-	tar -czf ./.ignore/$(APP)-$(PROGVER).darwin-amd64.tar.gz  ./.ignore/binaries/$(APP)-$(PROGVER).darwin-amd64  NOTICE LICENSE CHANGELOG.md
-	tar -czf ./.ignore/$(APP)-$(PROGVER).darwin-386.tar.gz    ./.ignore/binaries/$(APP)-$(PROGVER).darwin-386    NOTICE LICENSE CHANGELOG.md
-	tar -czf ./.ignore/$(APP)-$(PROGVER).linux-amd64.tar.gz   ./.ignore/binaries/$(APP)-$(PROGVER).linux-amd64   NOTICE LICENSE CHANGELOG.md
-	tar -czf ./.ignore/$(APP)-$(PROGVER).linux-arm.tar.gz     ./.ignore/binaries/$(APP)-$(PROGVER).linux-arm     NOTICE LICENSE CHANGELOG.md
-	tar -czf ./.ignore/$(APP)-$(PROGVER).linux-386.tar.gz     ./.ignore/binaries/$(APP)-$(PROGVER).linux-386     NOTICE LICENSE CHANGELOG.md
-	tar -czf ./.ignore/$(APP)-$(PROGVER).windows-amd64.tar.gz ./.ignore/binaries/$(APP)-$(PROGVER).windows-amd64 NOTICE LICENSE CHANGELOG.md
-	tar -czf ./.ignore/$(APP)-$(PROGVER).windows-386.tar.gz   ./.ignore/binaries/$(APP)-$(PROGVER).windows-386   NOTICE LICENSE CHANGELOG.md
+	tar -C ./.ignore/binaries/ -czf ./.ignore/$(APP)-$(PROGVER).darwin-amd64.tar.gz  $(APP)-$(PROGVER).darwin-amd64  NOTICE LICENSE CHANGELOG.md
+	tar -C ./.ignore/binaries/ -czf ./.ignore/$(APP)-$(PROGVER).darwin-386.tar.gz    $(APP)-$(PROGVER).darwin-386    NOTICE LICENSE CHANGELOG.md
+	tar -C ./.ignore/binaries/ -czf ./.ignore/$(APP)-$(PROGVER).linux-amd64.tar.gz   $(APP)-$(PROGVER).linux-amd64   NOTICE LICENSE CHANGELOG.md
+	tar -C ./.ignore/binaries/ -czf ./.ignore/$(APP)-$(PROGVER).linux-arm.tar.gz     $(APP)-$(PROGVER).linux-arm     NOTICE LICENSE CHANGELOG.md
+	tar -C ./.ignore/binaries/ -czf ./.ignore/$(APP)-$(PROGVER).linux-386.tar.gz     $(APP)-$(PROGVER).linux-386     NOTICE LICENSE CHANGELOG.md
+	tar -C ./.ignore/binaries/ -czf ./.ignore/$(APP)-$(PROGVER).windows-amd64.tar.gz $(APP)-$(PROGVER).windows-amd64 NOTICE LICENSE CHANGELOG.md
+	tar -C ./.ignore/binaries/ -czf ./.ignore/$(APP)-$(PROGVER).windows-386.tar.gz   $(APP)-$(PROGVER).windows-386   NOTICE LICENSE CHANGELOG.md
 
 	# create checksums
 	touch ./.ignore/sha256sums.txt
