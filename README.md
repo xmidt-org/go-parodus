@@ -29,10 +29,9 @@ By participating, you agree to this Code.
 ## Details
 
 ### parodus
-go-parodus has two main functions: 1)maintain the websocket connection with [talaria](https://github.com/xmidt-org/talaria).
-Managing the websocket layer is handled via the [kratos library](https://github.com/xmidt-org/kratos) which was originally developed for testing purposes.
-And 2) handle the nanomsg server with its clients. When a request comes from talaria, the wrp message is routed to the
-clients. For more information on how Parodus work refer to the [Wiki](https://github.com/xmidt-org/parodus/wiki/Parodus-In-Detail)
+go-parodus has two main functions: 
+ - maintain the websocket connection with [talaria](https://github.com/xmidt-org/talaria). Managing the websocket layer is handled via the [kratos library](https://github.com/xmidt-org/kratos) which was originally developed for testing purposes. 
+ - handle the nanomsg server with its clients. When a request comes from talaria, the wrp message is routed to the clients. For more information on how Parodus work refer to the [Wiki](https://github.com/xmidt-org/parodus/wiki/Parodus-In-Detail)
 
 Available Tags:
 _note_: not all flags have been implemented yet
@@ -66,8 +65,8 @@ the nanomsg client to parodus. The consumer of the package will need to implemen
 #### Examples
 For the following examples the XMiDT cluster must be up and running. For local testing I recommend standing up a [local
 docker cluster](https://github.com/xmidt-org/xmidt/tree/master/deploy).
-- request-response[examples/request-response/README.md] -> set and get information from a map
-- event[examples/request-response/README.md] -> spam talaria with events generated from a client
+- [request-response](examples/request-response/README.md) -> set and get information from a map
+- [event](examples/request-response/README.md) -> spam talaria with events generated from a client
 
 ## Build
 
