@@ -20,7 +20,7 @@ vendor:
 	$(GO) mod vendor
 
 .PHONY: build
-build: vendor
+build:
 	CGO_ENABLED=0 $(GO) build $(GOBUILDFLAGS)
 
 .PHONY: upx
