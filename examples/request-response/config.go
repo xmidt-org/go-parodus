@@ -43,14 +43,13 @@ func Provide(fs *pflag.FlagSet) client.ClientConfig {
 	}
 	parodusURL, err := fs.GetString("parodus-local-url")
 	if err != nil {
-		parodusURL ="tcp://127.0.0.1:6666"
+		parodusURL = "tcp://127.0.0.1:6666"
 	}
 	serviceURL, err := fs.GetString("service-url")
 	if err != nil {
-		serviceURL ="tcp://127.0.0.1:6666"
+		serviceURL = "tcp://127.0.0.1:6666"
 	}
 	debug, _ := fs.GetBool("debug")
-
 
 	return client.ClientConfig{
 		Name:       "config",
@@ -63,7 +62,7 @@ func Provide(fs *pflag.FlagSet) client.ClientConfig {
 	}
 }
 
-//ConfigSet holds the in-memory configuration
+// ConfigSet holds the in-memory configuration
 type ConfigSet struct {
 	Value    interface{} `json:"value,omitempty"`
 	DataType int         `json:"dataType,omitempty"`
