@@ -63,7 +63,6 @@ github.com/google/btree v1.0.0/go.mod h1:lNA+9X1NB3Zf8V7Ke586lFgjr2dZNuvo3lPJSGZ
 github.com/google/go-cmp v0.2.0/go.mod h1:oXzfMopK8JAjlY9xF4vHSVASa0yLyX7SntLO5aqRK0M=
 github.com/google/go-cmp v0.3.0/go.mod h1:8QqcDgzrUqlUb/G2PQTWiueGozuR1884gddMywk6iLU=
 github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/M65Eg=
-github.com/goph/emperror v0.17.2 h1:yLapQcmEsO0ipe9p5TaN22djm3OFV/TfM/fcYP0/J18=
 github.com/goph/emperror v0.17.2/go.mod h1:+ZbQ+fUNO/6FNiUo0ujtMjhgad9Xa6fQL9KhH4LNHic=
 github.com/gorilla/context v1.1.1/go.mod h1:kBGZzfjB9CEq2AlWe17Uuf7NDRt0dE0s8S51q0aT7Yg=
 github.com/gorilla/mux v1.6.1/go.mod h1:1lud6UwP+6orDFRuTfBEV8e9/aOM/c4fVVCaMa2zaAs=
@@ -187,8 +186,8 @@ github.com/ugorji/go v1.1.7/go.mod h1:kZn38zHttfInRq0xu/PH0az30d+z6vm202qpg1oXVM
 github.com/ugorji/go/codec v1.1.7 h1:2SvQaVZ1ouYrrKKwoSk2pzd4A9evlKJb9oTL+OaLUSs=
 github.com/ugorji/go/codec v1.1.7/go.mod h1:Ax+UKWsSmolVDwsd+7N3ZtXu+yMGCf907BLYF3GoBXY=
 github.com/xiang90/probing v0.0.0-20190116061207-43a291ad63a2/go.mod h1:UETIi67q53MR2AWcXfiuqkDkRtnGDLqkBTpCHuJHxtU=
-github.com/xmidt-org/kratos v0.0.0-20191025001218-03104a6a8b0e h1:Jr7BVi7qVmCyYp4gsArZCYbFoDbthK4gJ9r/pCZPlgA=
-github.com/xmidt-org/kratos v0.0.0-20191025001218-03104a6a8b0e/go.mod h1:cBuW0a2wlEReJ23jZwQ5jWUQF0rDqL9vsXxM0i6gb3M=
+github.com/xmidt-org/kratos v0.1.1-0.20200717000417-44f1313c4f86 h1:odk/GAx+dTj0noSnfIM+9jylulaxe+yVS44c85ajq/4=
+github.com/xmidt-org/kratos v0.1.1-0.20200717000417-44f1313c4f86/go.mod h1:cBuW0a2wlEReJ23jZwQ5jWUQF0rDqL9vsXxM0i6gb3M=
 github.com/xmidt-org/themis v0.1.0 h1:e2nNp6Zh3DsIAFEBmql9MBBF3Oy1CN07zrAEXGPpwcM=
 github.com/xmidt-org/themis v0.1.0/go.mod h1:o/Zdr+HED16KuSbCkf7FLbgPAR8RxLrNLGgrp6bK0G8=
 github.com/xmidt-org/webpa-common v1.3.2 h1:dE1Fi+XVnkt3tMGMjH7/hN/UGcaQ/ukKriXuMDyCWnM=

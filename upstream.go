@@ -22,6 +22,7 @@ import (
 	"github.com/xmidt-org/kratos"
 	"github.com/xmidt-org/webpa-common/logging"
 	"go.uber.org/fx"
+	"time"
 )
 
 func StartUpstreamConnection(config Config, lc fx.Lifecycle, logger log.Logger) (kratos.Client, error) {
@@ -48,11 +49,20 @@ func StartUpstreamConnection(config Config, lc fx.Lifecycle, logger log.Logger) 
 			return nil
 		},
 		ClientLogger: logger,
+		PingConfig: kratos.PingConfig{
+			PingWait:    time.Second * time.Duration(config.PingTimeout),
+			MaxPingMiss: 3,
+		},
 	})
-
 	if err != nil {
-		return nil, err
+		logging.Error(logger).Log(logging.MessageKey(), "failed to create client", logging.ErrorKey(), err)
+		if client != nil {
+			closeErr := client.Close()
+			logging.Info(logger).Log(logging.MessageKey(), "failed to close bad client", logging.ErrorKey(), closeErr)
+		}
 	}
+
+	logging.Info(logger).Log(logging.MessageKey(), "kratos client created")
 	lc.Append(fx.Hook{
 		OnStart: func(context context.Context) error {
 			return nil

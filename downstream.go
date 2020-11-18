@@ -52,6 +52,10 @@ func StartParodus(config Config, client kratos.Client, lc fx.Lifecycle, logger l
 		logging.Error(logger).Log(logging.MessageKey(), "can't listen on new pull socket", logging.ErrorKey(), err, "url", config.LocalURL)
 		return err
 	}
+	logging.Info(logger).Log(logging.MessageKey(), "Parodus Config", "config", config)
+	sock.SetPipeEventHook(func(event mangos.PipeEvent, pipe mangos.Pipe) {
+		logging.Info(logger).Log(logging.MessageKey(), "parodus pull socket event", "event", event, "pipe", pipe)
+	})
 
 	parodus := &Parodus{
 		sock:         sock,
