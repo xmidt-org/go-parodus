@@ -17,6 +17,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-kit/kit/log"
 	"github.com/xmidt-org/go-parodus/client"
 	"github.com/xmidt-org/kratos"
@@ -35,7 +36,8 @@ type Forwarder struct {
 	LastAlive time.Time
 	logger    log.Logger
 
-	sock mangos.Socket
+	stopTicker chan struct{}
+	sock       mangos.Socket
 }
 
 func CreateServiceForwarder(name string, url string, logger log.Logger) (*Forwarder, error) {
@@ -43,13 +45,35 @@ func CreateServiceForwarder(name string, url string, logger log.Logger) (*Forwar
 	if err != nil {
 		return nil, err
 	}
-	return &Forwarder{
-		Name:      name,
-		URL:       url,
-		LastAlive: time.Now(),
-		sock:      sock,
-		logger:    log.WithPrefix(logger, "forwarder", name),
-	}, nil
+
+	quit := make(chan struct{})
+
+	forwarder := &Forwarder{
+		Name:       name,
+		URL:        url,
+		LastAlive:  time.Now(),
+		sock:       sock,
+		stopTicker: quit,
+		logger:     log.WithPrefix(logger, "forwarder", name),
+	}
+	ticker := time.NewTicker(5 * time.Second)
+	message := &wrp.Message{Type: wrp.ServiceAliveMessageType}
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				// do stuff
+				forwarder.HandleMessage(message)
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+	sock.SetPipeEventHook(func(event mangos.PipeEvent, pipe mangos.Pipe) {
+		logging.Info(logger).Log(logging.MessageKey(), fmt.Sprintf("%s push socket event", name), "event", event, "pipe", pipe)
+	})
+	return forwarder, nil
 }
 
 func (forwarder *Forwarder) HandleMessage(message *wrp.Message) *wrp.Message {
@@ -63,6 +87,7 @@ func (forwarder *Forwarder) HandleMessage(message *wrp.Message) *wrp.Message {
 }
 
 func (forwarder *Forwarder) Close() {
+	forwarder.stopTicker <- struct{}{}
 	err := forwarder.sock.Close()
 	if err != nil {
 		logging.Error(forwarder.logger).Log(logging.MessageKey(), "failed to close socket", logging.ErrorKey(), err)

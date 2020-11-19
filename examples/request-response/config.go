@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/go-kit/kit/log"
+	"github.com/spf13/pflag"
 	"github.com/xmidt-org/go-parodus/client"
 	"github.com/xmidt-org/kratos"
 	"github.com/xmidt-org/webpa-common/logging"
@@ -29,7 +30,7 @@ import (
 	"net/http"
 )
 
-func Provide() client.ClientConfig {
+func Provide(fs *pflag.FlagSet) client.ClientConfig {
 	logger := logging.New(&logging.Options{
 		File:  "stdout",
 		JSON:  true,
@@ -40,19 +41,28 @@ func Provide() client.ClientConfig {
 		Data:   map[string]ConfigSet{},
 		logger: logger,
 	}
+	parodusURL, err := fs.GetString("parodus-local-url")
+	if err != nil {
+		parodusURL = "tcp://127.0.0.1:6666"
+	}
+	serviceURL, err := fs.GetString("service-url")
+	if err != nil {
+		serviceURL = "tcp://127.0.0.1:6666"
+	}
+	debug, _ := fs.GetBool("debug")
 
 	return client.ClientConfig{
 		Name:       "config",
-		ParodusURL: "tcp://127.0.0.1:6666",
-		ServiceURL: "tcp://127.0.0.1:13032",
-		Debug:      true,
+		ParodusURL: parodusURL,
+		ServiceURL: serviceURL,
+		Debug:      debug,
 		Logger:     logger,
 		MSGHandler: app,
 		Register:   time.Minute,
 	}
 }
 
-//ConfigSet holds the in-memory configuration
+// ConfigSet holds the in-memory configuration
 type ConfigSet struct {
 	Value    interface{} `json:"value,omitempty"`
 	DataType int         `json:"dataType,omitempty"`
