@@ -18,7 +18,7 @@ package client
 
 import (
 	"errors"
-	"github.com/xmidt-org/wrp-go/wrp"
+	"github.com/xmidt-org/wrp-go/v3"
 )
 
 var (

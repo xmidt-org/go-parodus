@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"github.com/go-kit/kit/log"
 	"github.com/xmidt-org/webpa-common/logging"
-	"github.com/xmidt-org/wrp-go/wrp"
+	"github.com/xmidt-org/wrp-go/v3"
 	"nanomsg.org/go/mangos/v2"
 	"nanomsg.org/go/mangos/v2/protocol/push"
 )
