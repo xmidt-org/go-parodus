@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - updated references to the main branch
 - improved configuration ability [#2](https://github.com/xmidt-org/go-parodus/pull/2)
 - bumped webpa-common to v1.11.4 [#3](https://github.com/xmidt-org/go-parodus/pull/3)
-- bumped kratos to v0.2.0 [#3](https://github.com/xmidt-org/go-parodus/pull/3)
+- bumped kratos to v0.2.1 [#4](https://github.com/xmidt-org/go-parodus/pull/4)
 - bumped wrp-go to v3.0.1 [#3](https://github.com/xmidt-org/go-parodus/pull/3)
 - bumped mangos to v2.0.8 [#3](https://github.com/xmidt-org/go-parodus/pull/3)
 - added base path to url to be more like c-parodus [#3](https://github.com/xmidt-org/go-parodus/pull/3)
