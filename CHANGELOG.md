@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- updated references to the main branch
 - improved configuration ability [#2](https://github.com/xmidt-org/go-parodus/pull/2)
 - bumped webpa-common to v1.11.4 [#3](https://github.com/xmidt-org/go-parodus/pull/3)
 - bumped kratos to v0.2.0 [#3](https://github.com/xmidt-org/go-parodus/pull/3)

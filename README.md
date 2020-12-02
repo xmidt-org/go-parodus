@@ -1,11 +1,11 @@
 # go-parodus
 
-[![Build Status](https://travis-ci.com/xmidt-org/go-parodus.svg?branch=master)](https://travis-ci.com/xmidt-org/go-parodus)
-[![codecov.io](http://codecov.io/github/xmidt-org/go-parodus/coverage.svg?branch=master)](http://codecov.io/github/xmidt-org/go-parodus?branch=master)
+[![Build Status](https://travis-ci.com/xmidt-org/go-parodus.svg?branch=main)](https://travis-ci.com/xmidt-org/go-parodus)
+[![codecov.io](http://codecov.io/github/xmidt-org/go-parodus/coverage.svg?branch=main)](http://codecov.io/github/xmidt-org/go-parodus?branch=main)
 [![Code Climate](https://codeclimate.com/github/xmidt-org/go-parodus/badges/gpa.svg)](https://codeclimate.com/github/xmidt-org/go-parodus)
 [![Issue Count](https://codeclimate.com/github/xmidt-org/go-parodus/badges/issue_count.svg)](https://codeclimate.com/github/xmidt-org/go-parodus)
 [![Go Report Card](https://goreportcard.com/badge/github.com/xmidt-org/go-parodus)](https://goreportcard.com/report/github.com/xmidt-org/go-parodus)
-[![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/xmidt-org/go-parodus/blob/master/LICENSE)
+[![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/xmidt-org/go-parodus/blob/main/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/xmidt-org/go-parodus.svg)](CHANGELOG.md)
 
 
@@ -64,7 +64,7 @@ the nanomsg client to parodus. The consumer of the package will need to implemen
 
 #### Examples
 For the following examples the XMiDT cluster must be up and running. For local testing I recommend standing up a [local
-docker cluster](https://github.com/xmidt-org/xmidt/tree/master/deploy).
+docker cluster](https://github.com/xmidt-org/xmidt/tree/main/deploy).
 - [request-response](examples/request-response/README.md) -> set and get information from a map
 - [event](examples/request-response/README.md) -> spam talaria with events generated from a client
 
