@@ -54,6 +54,10 @@ const (
 	VersionKeyName = "version"
 )
 
+const (
+	XMIDTPathURL = "/api/v2/device"
+)
+
 func SetupFlagSet(fs *pflag.FlagSet) error {
 	// Mark Device Info
 	fs.StringP(HardwareModelKeyName, "m", "", "the hardware model name")
@@ -124,6 +128,7 @@ func Provide(in ConfigFlagIn) (Config, error) {
 	config.FirmwareName, _ = in.FlagSet.GetString(FirmwareNameKeyName)
 	config.BootTime, _ = in.FlagSet.GetInt64(BootTimeKeyName)
 	config.URL, _ = in.FlagSet.GetString(URLKeyName)
+	config.URL += XMIDTPathURL
 	config.MaxBackoff, _ = in.FlagSet.GetInt(MaxBackoffKeyName)
 	config.PingTimeout, _ = in.FlagSet.GetInt(PingTimeoutKeyName)
 	config.Interface, _ = in.FlagSet.GetString(InterfaceKeyName)
