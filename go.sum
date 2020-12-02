@@ -560,8 +560,8 @@ github.com/xmidt-org/arrange v0.1.9/go.mod h1:PRA8iEZ11L93NsEkDP56x1mZyfDcWxzDUL
 github.com/xmidt-org/bascule v0.8.0/go.mod h1:dPxlbNT3lCwYAtOq2zbzyzTEKgM+azLSbKKcVmgSHBY=
 github.com/xmidt-org/bascule v0.8.1/go.mod h1:dPxlbNT3lCwYAtOq2zbzyzTEKgM+azLSbKKcVmgSHBY=
 github.com/xmidt-org/bascule v0.9.0/go.mod h1:C64nSBtUTTK/f2/mCvvp/qJhav5raD0T+by68DCp/gU=
-github.com/xmidt-org/kratos v0.2.0 h1:gXr6y1/SLFQClZgJIL46rls9cARU11Cy5bi/sRWYGTs=
-github.com/xmidt-org/kratos v0.2.0/go.mod h1:NUG4Fk/zaLjVnqRw8NAh+adOD/y6DMjoufEpbluAeuM=
+github.com/xmidt-org/kratos v0.2.1 h1:uaJDwf/Jil5/YGDH87nni6XaDoGtR+FhDsm937um39c=
+github.com/xmidt-org/kratos v0.2.1/go.mod h1:NUG4Fk/zaLjVnqRw8NAh+adOD/y6DMjoufEpbluAeuM=
 github.com/xmidt-org/themis v0.4.4/go.mod h1:0qRYFvKdrQhwjxH/1nAiTgBGT4cegJR76gfEYF5P7so=
 github.com/xmidt-org/webpa-common v1.1.0/go.mod h1:oCpKzOC+9h2vYHVzAU/06tDTQuBN4RZz+rhgIXptpOI=
 github.com/xmidt-org/webpa-common v1.3.2 h1:dE1Fi+XVnkt3tMGMjH7/hN/UGcaQ/ukKriXuMDyCWnM=
