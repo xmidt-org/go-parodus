@@ -1,8 +1,13 @@
-FROM docker.io/library/golang:1.14-alpine as builder
+FROM docker.io/library/golang:1.15-alpine as builder
 
-LABEL MAINTAINER="Jack Murdock <jack_murdock@comcast.com>"
+MAINTAINER Jack Murdock <jack_murdock@comcast.com>
 
-WORKDIR /go/src/github.com/xmidt-org/go-parodus
+WORKDIR /src
+
+ARG VERSION
+ARG GITCOMMIT
+ARG BUILDTIME
+
 
 RUN apk add --no-cache --no-progress \
     ca-certificates \
@@ -11,20 +16,27 @@ RUN apk add --no-cache --no-progress \
     openssh \
     gcc \
     libc-dev \
-    upx \
-    cmake autoconf make musl-dev gcc g++ openssl openssl-dev git cunit cunit-dev automake libtool util-linux-dev
+    upx
 
+RUN go get github.com/geofffranks/spruce/cmd/spruce && chmod +x /go/bin/spruce
 COPY . .
-RUN make build
-RUN CGO_ENABLED=0 go build  -a -ldflags "-w -s"  -o req-res github.com/xmidt-org/go-parodus/examples/request-response/
+RUN make test release
 
-FROM simulator:latest
+FROM alpine:3.12.1
 
-COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /go/src/github.com/xmidt-org/go-parodus/parodus /go/src/github.com/xmidt-org/go-parodus/req-res /
-COPY entrypoint.sh /
+COPY --from=builder /src/go-parodus /src/go-parodus.yaml /src/deploy/packaging/entrypoint.sh /go/bin/spruce /src/Dockerfile /src/NOTICE /src/LICENSE /src/CHANGELOG.md /
+COPY --from=builder /src/deploy/packaging/go-parodus.yaml /tmp/go-parodus.yaml
+
+RUN mkdir /etc/go-parodus/ && touch /etc/go-parodus/go-parodus.yaml && chmod 666 /etc/go-parodus/go-parodus.yaml
 
 USER nobody
 
 ENTRYPOINT ["/entrypoint.sh"]
+
+EXPOSE 6600
+EXPOSE 6601
+EXPOSE 6602
+EXPOSE 6603
+
+CMD ["/go-parodus"]
