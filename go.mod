@@ -9,6 +9,6 @@ require (
 	github.com/xmidt-org/themis v0.4.4
 	github.com/xmidt-org/webpa-common v1.11.4
 	github.com/xmidt-org/wrp-go/v3 v3.0.1
-	go.uber.org/fx v1.13.0
+	go.uber.org/fx v1.18.1
 	nanomsg.org/go/mangos/v2 v2.0.8
 )
