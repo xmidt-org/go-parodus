@@ -18,15 +18,16 @@ package main
 
 import (
 	"context"
+	"time"
+
 	"github.com/go-kit/kit/log"
 	libparodus "github.com/xmidt-org/go-parodus/client"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/logging"
+	"github.com/xmidt-org/webpa-common/v2/logging"
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
 	"nanomsg.org/go/mangos/v2"
 	"nanomsg.org/go/mangos/v2/protocol/pull"
-	"time"
 
 	// register transports
 	_ "nanomsg.org/go/mangos/v2/transport/all"

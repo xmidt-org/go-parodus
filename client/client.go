@@ -20,17 +20,18 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/url"
+	"time"
+
 	"github.com/go-kit/kit/log"
 	"github.com/spf13/pflag"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/logging"
+	"github.com/xmidt-org/webpa-common/v2/logging"
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
 	"nanomsg.org/go/mangos/v2"
 	"nanomsg.org/go/mangos/v2/protocol/pull"
 	"nanomsg.org/go/mangos/v2/protocol/push"
-	"net/url"
-	"time"
 
 	// register transports
 	_ "nanomsg.org/go/mangos/v2/transport/all"
