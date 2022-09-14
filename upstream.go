@@ -20,9 +20,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/v2/logging"
+	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
 	"go.uber.org/fx"
 )
 

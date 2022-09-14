@@ -27,3 +27,8 @@ linters-settings:
     errorf: false
   misspell:
     locale: US
+  funlen:
+    # TODO: Refactor long funcs and change this back to default 60 lines, 40 statements
+    lines: 80
+    statements: 60
+    

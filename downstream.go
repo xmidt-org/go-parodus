@@ -20,10 +20,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	libparodus "github.com/xmidt-org/go-parodus/client"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/v2/logging"
+	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
 	"nanomsg.org/go/mangos/v2"

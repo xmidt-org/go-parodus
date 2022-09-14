@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/go-kit/kit v0.12.0
+	github.com/go-kit/log v0.2.1
 	github.com/spf13/pflag v1.0.5
 	github.com/xmidt-org/kratos v0.2.1
 	github.com/xmidt-org/themis v0.4.8
@@ -20,7 +21,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
-	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect

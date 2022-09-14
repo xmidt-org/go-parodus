@@ -23,10 +23,10 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/go-kit/kit/log"
+	"github.com/go-kit/log"
 	"github.com/spf13/pflag"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/v2/logging"
+	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
 	"nanomsg.org/go/mangos/v2"
@@ -118,7 +118,6 @@ func StartClient(config ClientConfig, lc fx.Lifecycle) (SendMessageHandler, erro
 		msgHandler:      config.MSGHandler,
 		parodusUpstream: make(chan wrp.Message, 100),
 	}
-
 	// create push socket
 	if parodusSock, err := push.NewSocket(); err != nil {
 		return nil, fmt.Errorf("can't get new push socket: %s", err)
@@ -128,7 +127,6 @@ func StartClient(config ClientConfig, lc fx.Lifecycle) (SendMessageHandler, erro
 		}
 		client.parodusSock = parodusSock
 	}
-
 	// create pull socket
 	if serviceSock, err := pull.NewSocket(); err != nil {
 		return nil, fmt.Errorf("can't get new pull socket: %s", err)
@@ -143,7 +141,6 @@ func StartClient(config ClientConfig, lc fx.Lifecycle) (SendMessageHandler, erro
 	wrpBusRead := make(chan wrp.Message, 100)
 	ticker := time.NewTicker(config.Register)
 	stopTicker := make(chan struct{}, 1)
-
 	lc.Append(fx.Hook{
 		OnStart: func(context context.Context) error {
 			go ReadPump(client.serviceSock, dataBus, client.logger)
@@ -151,8 +148,7 @@ func StartClient(config ClientConfig, lc fx.Lifecycle) (SendMessageHandler, erro
 			go ParseBus(wrpBusRead, dataBus, client.stopParsing, client.logger)
 			go client.handleMSG(wrpBusRead, client.parodusUpstream)
 			client.sendRegistration()
-			// Send alive every tick
-			go func() {
+			go func() { // Send alive every tick
 				for {
 					select {
 					case <-stopTicker:
@@ -174,7 +170,6 @@ func StartClient(config ClientConfig, lc fx.Lifecycle) (SendMessageHandler, erro
 			return nil
 		},
 	})
-
 	return &client, nil
 }
 

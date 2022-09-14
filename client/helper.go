@@ -19,8 +19,8 @@ package client
 import (
 	"fmt"
 
-	"github.com/go-kit/kit/log"
-	"github.com/xmidt-org/webpa-common/v2/logging"
+	"github.com/go-kit/log"
+	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
 	"github.com/xmidt-org/wrp-go/v3"
 	"nanomsg.org/go/mangos/v2"
 	"nanomsg.org/go/mangos/v2/protocol/push"
@@ -37,8 +37,7 @@ func ReadPump(pullSock mangos.Socket, msgBus chan []byte, logger log.Logger) {
 		}
 		msgBus <- data
 	}
-	pullSock.Close()
-	logging.Debug(logger).Log(logging.MessageKey(), "read pump has stopped")
+	// where to close pullSock?
 }
 
 func WritePump(pushSock mangos.Socket, bus chan wrp.Message, stopWriting chan struct{}, logger log.Logger) {
