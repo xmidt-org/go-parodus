@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 - Migrate to github actions, normalize analysis tools, Dockerfiles and Makefiles. [#6](https://github.com/xmidt-org/go-parodus/pull/6)
+- Patch failing Dockerfile, fx linter issues [#23](https://github.com/xmidt-org/go-parodus/pull/23)
 
 ## [v0.2.0]
 - updated references to the main branch
