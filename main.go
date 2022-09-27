@@ -17,13 +17,15 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"os"
+	"runtime"
+
 	"github.com/spf13/pflag"
 	"github.com/xmidt-org/themis/config"
 	"github.com/xmidt-org/themis/xlog"
 	"go.uber.org/fx"
-	"os"
-	"runtime"
 )
 
 const (
@@ -52,15 +54,15 @@ func main() {
 		),
 	)
 
-	switch err := app.Err(); err {
-	case pflag.ErrHelp:
+	err := app.Err()
+	if errors.Is(err, pflag.ErrHelp) {
 		return
-	case nil:
+	} else if errors.Is(err, nil) {
 		app.Run()
-	default:
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(2)
 	}
+
+	fmt.Fprintln(os.Stderr, err)
+	os.Exit(2)
 }
 
 func ProvideVersionPrintFunc() func() {

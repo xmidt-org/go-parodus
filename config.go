@@ -18,10 +18,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/spf13/pflag"
-	"go.uber.org/fx"
 	"strings"
 	"time"
+
+	"github.com/spf13/pflag"
+	"go.uber.org/fx"
 )
 
 const (
@@ -41,12 +42,9 @@ const (
 	URLKeyName         = "xmidt-url"
 	MaxBackoffKeyName  = "xmidt-backoff-max"
 	InterfaceKeyName   = "xmidt-interface-used"
-	ProtocolKeyName    = ""
-	UUIDKeyName        = ""
 	LocalURLKeyName    = "parodus-local-url"
 	PartnerIDKeyName   = "partner-id"
 	CertPathKeyName    = "ssl-cert-path"
-	AuthTokenKeyName   = ""
 	IPv4KeyName        = "force-ipv4"
 	IPv6KeyName        = "force-ipv6"
 

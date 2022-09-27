@@ -27,9 +27,5 @@ func validateMAC(mac string) bool {
 	macAddrRE = regexp.MustCompile(`(([0-9A-Fa-f]{2}(?:[:-]?)){5}[0-9A-Fa-f]{2})|(([0-9A-Fa-f]{4}\.){2}[0-9A-Fa-f]{4})`)
 	macAddrSlice = macAddrRE.FindAllString(mac, -1)
 
-	if len(macAddrSlice) >= 1 {
-		return true
-	}
-
-	return false
+	return len(macAddrSlice) >= 1
 }

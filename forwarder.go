@@ -18,18 +18,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/go-kit/kit/log"
-	"github.com/xmidt-org/go-parodus/client"
-	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/logging"
-	"github.com/xmidt-org/wrp-go/v3"
-	"nanomsg.org/go/mangos/v2"
 	"net/http"
 	"time"
+
+	"github.com/go-kit/log"
+	"github.com/xmidt-org/go-parodus/client"
+	"github.com/xmidt-org/kratos"
+	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
+	"github.com/xmidt-org/wrp-go/v3"
+	"nanomsg.org/go/mangos/v2"
 )
 
 // Forwarder struct forwards messages coming from Talaria down to the libparouds clients
-//
 type Forwarder struct {
 	Name      string
 	URL       string

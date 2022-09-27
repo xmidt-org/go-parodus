@@ -18,11 +18,12 @@ package main
 
 import (
 	"context"
-	"github.com/go-kit/kit/log"
-	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/logging"
-	"go.uber.org/fx"
 	"time"
+
+	"github.com/go-kit/log"
+	"github.com/xmidt-org/kratos"
+	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
+	"go.uber.org/fx"
 )
 
 func StartUpstreamConnection(config Config, lc fx.Lifecycle, logger log.Logger) (kratos.Client, error) {

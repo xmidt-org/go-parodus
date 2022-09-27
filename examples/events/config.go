@@ -20,14 +20,15 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/go-kit/kit/log"
 	"github.com/xmidt-org/go-parodus/client"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/logging"
+	"github.com/xmidt-org/webpa-common/v2/logging"
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
-	"net/http"
-	"time"
 )
 
 func Provide() (client.ClientConfig, *App) {
