@@ -20,12 +20,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-kit/log"
 	libparodus "github.com/xmidt-org/go-parodus/client"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 	"nanomsg.org/go/mangos/v2"
 	"nanomsg.org/go/mangos/v2/protocol/pull"
 
@@ -35,27 +34,27 @@ import (
 
 type Parodus struct {
 	sock   mangos.Socket
-	logger log.Logger
+	logger *zap.Logger
 
 	client       kratos.Client
 	stopHandling chan struct{}
 }
 
-func StartParodus(config Config, client kratos.Client, lc fx.Lifecycle, logger log.Logger) error {
+func StartParodus(config Config, client kratos.Client, lc fx.Lifecycle, logger *zap.Logger) error {
 	var sock mangos.Socket
 	var err error
 
 	if sock, err = pull.NewSocket(); err != nil {
-		logging.Error(logger).Log(logging.MessageKey(), "can't get new pull socket", logging.ErrorKey(), err)
+		logger.Error("can't get new pull socket", zap.Error(err))
 		return err
 	}
 	if err = sock.Listen(config.LocalURL); err != nil {
-		logging.Error(logger).Log(logging.MessageKey(), "can't listen on new pull socket", logging.ErrorKey(), err, "url", config.LocalURL)
+		logger.Error("can't listen on new pull socket", zap.String("url", config.LocalURL))
 		return err
 	}
-	logging.Info(logger).Log(logging.MessageKey(), "Parodus Config", "config", config)
+	logger.Info("Parodus Config", zap.Any("config", config))  // would reflection be ok here or should we implement an object marshaler interface?
 	sock.SetPipeEventHook(func(event mangos.PipeEvent, pipe mangos.Pipe) {
-		logging.Info(logger).Log(logging.MessageKey(), "parodus pull socket event", "event", event, "pipe", pipe)
+		logger.Info("parodus pull socket event", zap.Any("event", event), zap.Any("pipe", pipe))
 	})
 
 	parodus := &Parodus{
@@ -91,9 +90,9 @@ func StartParodus(config Config, client kratos.Client, lc fx.Lifecycle, logger l
 }
 
 func (p *Parodus) msgHandler(wrpBus chan wrp.Message) {
-	logging.Debug(p.logger).Log(logging.MessageKey(), "Starting msgHandler")
+	p.logger.Debug("Starting msgHandler")
 	defer func() {
-		logging.Debug(p.logger).Log(logging.MessageKey(), "msgHandler has stopped")
+		p.logger.Debug("msgHandler has stopped")
 	}()
 	for {
 		select {
@@ -102,23 +101,23 @@ func (p *Parodus) msgHandler(wrpBus chan wrp.Message) {
 		case msg := <-wrpBus:
 			switch msg.Type {
 			case wrp.ServiceRegistrationMessageType:
-				logging.Debug(p.logger).Log(logging.MessageKey(), "received service registration", "url", msg.URL, "name", msg.ServiceName)
+				p.logger.Debug("received service registration", zap.String("url", msg.URL), zap.String("name", msg.ServiceName))
 
 				if handler, err := p.client.HandlerRegistry().GetHandler(msg.ServiceName); err != nil {
 					// TODO: create timer for keep alive
 					service, err := CreateServiceForwarder(msg.ServiceName, msg.URL, p.logger)
 					if err != nil {
-						logging.Error(p.logger).Log(logging.MessageKey(), "failed to send message to talaria", logging.ErrorKey(), err)
+						p.logger.Debug("failed to send message to talaria", zap.Error(err))
 					}
 					err = p.client.HandlerRegistry().Add(service.Name, service)
 					if err != nil {
-						logging.Error(p.logger).Log(logging.MessageKey(), "failed to add service to registry", logging.ErrorKey(), err)
+						p.logger.Error("failed to add service to registry", zap.Error(err))
 					}
 				} else {
 					// update handler timestamp
 					if forwarder, ok := handler.(*Forwarder); ok {
 						forwarder.LastAlive = time.Now()
-						logging.Debug(p.logger).Log(logging.MessageKey(), "updated registration timestamp", "url", msg.URL, "name", msg.ServiceName)
+						p.logger.Debug("updated registration timestamp", zap.String("url", msg.URL), zap.String("name", msg.ServiceName))
 					}
 				}
 			case wrp.SimpleRequestResponseMessageType:
@@ -132,11 +131,11 @@ func (p *Parodus) msgHandler(wrpBus chan wrp.Message) {
 				if handler, err := p.client.HandlerRegistry().GetHandler(msg.ServiceName); err == nil {
 					if forwarder, ok := handler.(*Forwarder); ok {
 						forwarder.LastAlive = time.Now()
-						logging.Debug(p.logger).Log(logging.MessageKey(), "updated registration timestamp", "url", msg.URL, "name", msg.ServiceName)
+						p.logger.Debug("updated registration timestamp", zap.String("url", msg.URL), zap.String("name", msg.ServiceName))
 					}
 				}
 			default:
-				logging.Error(p.logger).Log(logging.MessageKey(), "Unexpected WRP Message. Please file an issue at github.com/xmidt-org/go-parodus/issues", "wrp", msg)
+				p.logger.Error("Unexpected WRP Message. Please file an issue at github.com/xmidt-org/go-parodus/issues", zap.Any("wrp", msg))
 			}
 		}
 	}

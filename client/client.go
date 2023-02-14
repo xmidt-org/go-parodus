@@ -23,10 +23,9 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/go-kit/log"
+	"go.uber.org/zap"
 	"github.com/spf13/pflag"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
 	"nanomsg.org/go/mangos/v2"
@@ -51,7 +50,7 @@ type client struct {
 	name string
 	url  string
 
-	logger      log.Logger
+	logger      *zap.Logger
 	parodusSock mangos.Socket
 	serviceSock mangos.Socket
 
@@ -68,7 +67,7 @@ type ClientConfig struct {
 	ParodusURL string
 	ServiceURL string
 	Debug      bool
-	Logger     log.Logger
+	Logger     *zap.Logger
 	MSGHandler kratos.DownstreamHandler
 	Register   time.Duration
 }
@@ -95,7 +94,11 @@ func validateConfig(config *ClientConfig) error {
 		return errors.New("handler must be defined")
 	}
 	if config.Logger == nil {
-		config.Logger = logging.DefaultLogger()
+		var err error
+		config.Logger = config.Logger.WithOptions(zap.Fields(zap.String("component", "libparodus")) ) 
+		if (err != nil) {
+			fmt.Println("error creating logger")
+		}
 	}
 	if config.Register == 0 {
 		config.Register = time.Minute
@@ -111,7 +114,7 @@ func StartClient(config ClientConfig, lc fx.Lifecycle) (SendMessageHandler, erro
 	client := client{
 		name:            config.Name,
 		url:             config.ServiceURL,
-		logger:          log.WithPrefix(config.Logger, "component", "libparodus"),
+		logger:          config.Logger.WithOptions(zap.Fields(zap.String("component", "libparodus"))),
 		stopParsing:     make(chan struct{}),
 		stopSending:     make(chan struct{}),
 		stopHandling:    make(chan struct{}),
@@ -131,7 +134,7 @@ func StartClient(config ClientConfig, lc fx.Lifecycle) (SendMessageHandler, erro
 	if serviceSock, err := pull.NewSocket(); err != nil {
 		return nil, fmt.Errorf("can't get new pull socket: %s", err)
 	} else {
-		logging.Debug(client.logger).Log(logging.MessageKey(), fmt.Sprintf("listing on %s", config.ServiceURL))
+		client.logger.Info(fmt.Sprintf("listing on %s", config.ServiceURL))
 		if err := serviceSock.Listen(config.ServiceURL); err != nil {
 			return nil, fmt.Errorf("can't listen on pull socket: %s", err)
 		}
@@ -162,7 +165,7 @@ func StartClient(config ClientConfig, lc fx.Lifecycle) (SendMessageHandler, erro
 			return nil
 		},
 		OnStop: func(context context.Context) error {
-			logging.Info(client.logger).Log(logging.MessageKey(), "stopping client")
+			client.logger.Info("stopping client")
 			close(client.stopSending)
 			close(client.stopHandling)
 			close(client.stopParsing)
@@ -178,10 +181,10 @@ func (c *client) handleMSG(wrpBusIn chan wrp.Message, wrpBusOut chan wrp.Message
 		select {
 		case <-c.stopHandling:
 			// TODO: should I do more stop logic?
-			logging.Debug(c.logger).Log(logging.MessageKey(), "stopping handleMSG")
+			c.logger.Debug("stopping handleMSG")
 			return
 		case msg := <-wrpBusIn:
-			logging.Debug(c.logger).Log(logging.MessageKey(), "received msg", "UUID", msg.TransactionUUID)
+			c.logger.Debug("received msg", zap.String("UUID", msg.TransactionUUID))
 
 			switch msg.Type {
 			case wrp.ServiceAliveMessageType:
