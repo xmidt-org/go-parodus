@@ -52,7 +52,7 @@ func StartParodus(config Config, client kratos.Client, lc fx.Lifecycle, logger *
 		logger.Error("can't listen on new pull socket", zap.String("url", config.LocalURL))
 		return err
 	}
-	logger.Info("Parodus Config", zap.Any("config", config))  // would reflection be ok here or should we implement an object marshaler interface?
+	logger.Info("Parodus Config", zap.Any("config", config)) // should reflection be avoided in embedded firmware?  should we use object marshaler printing all objects?
 	sock.SetPipeEventHook(func(event mangos.PipeEvent, pipe mangos.Pipe) {
 		logger.Info("parodus pull socket event", zap.Any("event", event), zap.Any("pipe", pipe))
 	})

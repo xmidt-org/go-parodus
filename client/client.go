@@ -23,11 +23,11 @@ import (
 	"net/url"
 	"time"
 
-	"go.uber.org/zap"
 	"github.com/spf13/pflag"
 	"github.com/xmidt-org/kratos"
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 	"nanomsg.org/go/mangos/v2"
 	"nanomsg.org/go/mangos/v2/protocol/pull"
 	"nanomsg.org/go/mangos/v2/protocol/push"
@@ -94,11 +94,7 @@ func validateConfig(config *ClientConfig) error {
 		return errors.New("handler must be defined")
 	}
 	if config.Logger == nil {
-		var err error
-		config.Logger = config.Logger.WithOptions(zap.Fields(zap.String("component", "libparodus")) ) 
-		if (err != nil) {
-			fmt.Println("error creating logger")
-		}
+		config.Logger = config.Logger.WithOptions(zap.Fields(zap.String("component", "libparodus")))
 	}
 	if config.Register == 0 {
 		config.Register = time.Minute
