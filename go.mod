@@ -10,7 +10,7 @@ require (
 	github.com/xmidt-org/themis v0.4.11
 	github.com/xmidt-org/webpa-common/v2 v2.0.7
 	github.com/xmidt-org/wrp-go/v3 v3.1.6
-	go.uber.org/fx v1.19.3
+	go.uber.org/fx v1.20.0
 	nanomsg.org/go/mangos/v2 v2.0.8
 )
 
@@ -52,7 +52,7 @@ require (
 	github.com/ugorji/go/codec v1.2.11 // indirect
 	github.com/xmidt-org/webpa-common v1.11.9 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/dig v1.16.1 // indirect
+	go.uber.org/dig v1.17.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.23.0 // indirect
 	golang.org/x/sys v0.1.0 // indirect
