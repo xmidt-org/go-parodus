@@ -25,6 +25,7 @@ import (
 
 	"github.com/spf13/pflag"
 	"github.com/xmidt-org/kratos"
+	"github.com/xmidt-org/sallust"
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -94,7 +95,7 @@ func validateConfig(config *ClientConfig) error {
 		return errors.New("handler must be defined")
 	}
 	if config.Logger == nil {
-		// config.Logger = logging.DefaultLogger()
+		config.Logger = sallust.Default()
 	}
 	if config.Register == 0 {
 		config.Register = time.Minute
@@ -107,10 +108,11 @@ func StartClient(config ClientConfig, lc fx.Lifecycle) (SendMessageHandler, erro
 	if err := validateConfig(&config); err != nil {
 		return nil, err
 	}
+	logger := config.Logger.With(zap.String("component", "libparodus"))
 	client := client{
-		name: config.Name,
-		url:  config.ServiceURL,
-		// logger:          log.WithPrefix(config.Logger, "component", "libparodus"),
+		name:            config.Name,
+		url:             config.ServiceURL,
+		logger:          logger,
 		stopParsing:     make(chan struct{}),
 		stopSending:     make(chan struct{}),
 		stopHandling:    make(chan struct{}),

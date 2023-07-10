@@ -31,16 +31,9 @@ import (
 )
 
 func Provide(fs *pflag.FlagSet, logger *zap.Logger) client.ClientConfig {
-	// logger := logging.New(&logging.Options{
-	// 	File:  "stdout",
-	// 	JSON:  true,
-	// 	Level: "DEBUG",
-	// })
-
-
 	app := &App{
-		Data: map[string]ConfigSet{},
-		// logger: logger,
+		Data:   map[string]ConfigSet{},
+		logger: logger,
 	}
 	parodusURL, err := fs.GetString("parodus-local-url")
 	if err != nil {

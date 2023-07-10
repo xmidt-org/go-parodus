@@ -47,7 +47,10 @@ func main() {
 			Provide,
 			config.ProvideViper(),
 			StartUpstreamConnection,
-			//TODO: add func for log
+			func(u config.Unmarshaller) (c sallust.Config, err error) {
+				err = u.UnmarshalKey("log", &c)
+				return
+			},
 		),
 		fx.Invoke(
 			StartParodus,

@@ -33,7 +33,10 @@ func main() {
 		config.CommandLine{Name: "events"}.Provide(client.SetupFlagSet),
 		fx.Provide(
 			config.ProvideViper(),
-			//TODO: add func for logger
+			func(u config.Unmarshaller) (c sallust.Config, err error) {
+				err = u.UnmarshalKey("log", &c)
+				return
+			},
 			Provide,
 			client.StartClient,
 		),

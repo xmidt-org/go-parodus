@@ -30,15 +30,10 @@ import (
 	"go.uber.org/zap"
 )
 
-func Provide() (client.ClientConfig, *App) {
-	// logger := logging.New(&logging.Options{
-	// 	File:  "stdout",
-	// 	JSON:  true,
-	// 	Level: "DEBUG",
-	// })
+func Provide(logger *zap.Logger) (client.ClientConfig, *App) {
 
 	app := &App{
-		// logger:      logger,
+		logger:      logger,
 		stopSending: make(chan struct{}, 1),
 	}
 
@@ -47,7 +42,7 @@ func Provide() (client.ClientConfig, *App) {
 		ParodusURL: "tcp://127.0.0.1:6666",
 		ServiceURL: "tcp://127.0.0.1:13031",
 		Debug:      true,
-		// Logger:     logger,
+		Logger:     logger,
 		MSGHandler: app,
 		Register:   time.Minute,
 	}, app
