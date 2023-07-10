@@ -20,13 +20,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-kit/log"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 )
 
-func StartUpstreamConnection(config Config, lc fx.Lifecycle, logger log.Logger) (kratos.Client, error) {
+func StartUpstreamConnection(config Config, lc fx.Lifecycle, logger *zap.Logger) (kratos.Client, error) {
 	queueConfig := kratos.QueueConfig{
 		MaxWorkers: 5,
 		Size:       100,
@@ -45,7 +44,7 @@ func StartUpstreamConnection(config Config, lc fx.Lifecycle, logger log.Logger) 
 		HandleMsgQueue:       queueConfig,
 		Handlers:             []kratos.HandlerConfig{},
 		HandlePingMiss: func() error {
-			logging.Error(logger).Log(logging.MessageKey(), "Ping Miss")
+			logger.Error("Ping Miss")
 			// TODO: handle reconnect
 			return nil
 		},
@@ -56,14 +55,14 @@ func StartUpstreamConnection(config Config, lc fx.Lifecycle, logger log.Logger) 
 		},
 	})
 	if err != nil {
-		logging.Error(logger).Log(logging.MessageKey(), "failed to create client", logging.ErrorKey(), err)
+		logger.Error("failed to create client", zap.Error(err))
 		if client != nil {
 			closeErr := client.Close()
-			logging.Info(logger).Log(logging.MessageKey(), "failed to close bad client", logging.ErrorKey(), closeErr)
+			logger.Info("failed to close bad client", zap.Error(closeErr))
 		}
 	}
 
-	logging.Info(logger).Log(logging.MessageKey(), "kratos client created")
+	logger.Info("kratos client created")
 	lc.Append(fx.Hook{
 		OnStart: func(context context.Context) error {
 			return nil

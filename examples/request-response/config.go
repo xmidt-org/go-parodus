@@ -21,26 +21,26 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-kit/kit/log"
 	"github.com/spf13/pflag"
 	"github.com/xmidt-org/go-parodus/client"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/v2/logging"
 	"github.com/xmidt-org/wrp-go/v3"
+	"go.uber.org/zap"
 
 	"net/http"
 )
 
-func Provide(fs *pflag.FlagSet) client.ClientConfig {
-	logger := logging.New(&logging.Options{
-		File:  "stdout",
-		JSON:  true,
-		Level: "DEBUG",
-	})
+func Provide(fs *pflag.FlagSet, logger *zap.Logger) client.ClientConfig {
+	// logger := logging.New(&logging.Options{
+	// 	File:  "stdout",
+	// 	JSON:  true,
+	// 	Level: "DEBUG",
+	// })
+
 
 	app := &App{
-		Data:   map[string]ConfigSet{},
-		logger: logger,
+		Data: map[string]ConfigSet{},
+		// logger: logger,
 	}
 	parodusURL, err := fs.GetString("parodus-local-url")
 	if err != nil {
@@ -71,14 +71,14 @@ type ConfigSet struct {
 
 type App struct {
 	Data   map[string]ConfigSet
-	logger log.Logger
+	logger *zap.Logger
 }
 
 func (app *App) HandleMessage(msg *wrp.Message) *wrp.Message {
-	logging.Debug(app.logger).Log(logging.MessageKey(), "Received Message", "wrp", msg)
+	app.logger.Debug("Received Message", zap.Any("wrp", msg))
 	switch msg.Type {
 	case wrp.SimpleRequestResponseMessageType:
-		logging.Debug(app.logger).Log(logging.MessageKey(), "working on message", "uuid", msg.TransactionUUID, "source", msg.Source)
+		app.logger.Debug("working on message", zap.String("uuid", msg.TransactionUUID), zap.Any("source", msg.Source))
 		var request ConfigRequest
 		err := json.Unmarshal(msg.Payload, &request)
 		if err != nil {
@@ -142,7 +142,7 @@ func (app *App) handleGet(request ConfigRequest) ConfigResponse {
 	}
 
 	for _, n := range request.Names {
-		logging.Debug(app.logger).Log(logging.MessageKey(), "working names", "name", n)
+		app.logger.Debug("working names", zap.String("name", n))
 
 		cfgSet, ok := app.Data[n]
 
@@ -162,7 +162,7 @@ func (app *App) handleGet(request ConfigRequest) ConfigResponse {
 		})
 	}
 
-	logging.Debug(app.logger).Log(logging.MessageKey(), "done", "params", len(response.Parameters), "map", app.Data)
+	app.logger.Debug("done", zap.Int("params", len(response.Parameters)), zap.Any("map", app.Data))
 
 	return response
 }

@@ -23,23 +23,22 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-kit/kit/log"
 	"github.com/xmidt-org/go-parodus/client"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/v2/logging"
 	"github.com/xmidt-org/wrp-go/v3"
 	"go.uber.org/fx"
+	"go.uber.org/zap"
 )
 
 func Provide() (client.ClientConfig, *App) {
-	logger := logging.New(&logging.Options{
-		File:  "stdout",
-		JSON:  true,
-		Level: "DEBUG",
-	})
+	// logger := logging.New(&logging.Options{
+	// 	File:  "stdout",
+	// 	JSON:  true,
+	// 	Level: "DEBUG",
+	// })
 
 	app := &App{
-		logger:      logger,
+		// logger:      logger,
 		stopSending: make(chan struct{}, 1),
 	}
 
@@ -48,14 +47,14 @@ func Provide() (client.ClientConfig, *App) {
 		ParodusURL: "tcp://127.0.0.1:6666",
 		ServiceURL: "tcp://127.0.0.1:13031",
 		Debug:      true,
-		Logger:     logger,
+		// Logger:     logger,
 		MSGHandler: app,
 		Register:   time.Minute,
 	}, app
 }
 
 type App struct {
-	logger      log.Logger
+	logger      *zap.Logger
 	out         client.SendMessageHandler
 	stopSending chan struct{}
 }
@@ -100,9 +99,9 @@ func (app *App) sendEvents() {
 				Payload:     []byte(fmt.Sprintf(`{"time":"%s"}`, time.Now())),
 			}, context.Background())
 			if err != nil {
-				logging.Error(app.logger).Log(logging.MessageKey(), "Failed to send message", logging.ErrorKey(), err)
+				app.logger.Error("Failed to send message", zap.Error(err))
 			} else {
-				logging.Debug(app.logger).Log(logging.MessageKey(), "Sent message")
+				app.logger.Debug("Sent message")
 			}
 		}
 	}

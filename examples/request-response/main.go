@@ -18,22 +18,27 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/spf13/pflag"
 	"github.com/xmidt-org/go-parodus/client"
+	"github.com/xmidt-org/sallust"
 	"github.com/xmidt-org/themis/config"
-	"github.com/xmidt-org/themis/xlog"
 	"go.uber.org/fx"
-	"os"
 )
 
 func main() {
 	app := fx.New(
-		xlog.Logger(),
+		sallust.WithLogger(),
 		config.CommandLine{Name: "request-response"}.Provide(client.SetupFlagSet),
 		fx.Provide(
 			config.ProvideViper(),
-			xlog.Unmarshal("log"),
+			//TODO: add func for logger
 			Provide,
+			func(u config.Unmarshaller) (c sallust.Config, err error) {
+				err = u.UnmarshalKey("log", &c)
+				return
+			},
 		),
 		fx.Invoke(
 			client.StartClient,

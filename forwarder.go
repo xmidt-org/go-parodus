@@ -21,11 +21,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-kit/log"
 	"github.com/xmidt-org/go-parodus/client"
 	"github.com/xmidt-org/kratos"
-	"github.com/xmidt-org/webpa-common/v2/logging" // nolint:staticcheck
 	"github.com/xmidt-org/wrp-go/v3"
+	"go.uber.org/zap"
 	"nanomsg.org/go/mangos/v2"
 )
 
@@ -34,18 +33,18 @@ type Forwarder struct {
 	Name      string
 	URL       string
 	LastAlive time.Time
-	logger    log.Logger
+	logger    *zap.Logger
 
 	stopTicker chan struct{}
 	sock       mangos.Socket
 }
 
-func CreateServiceForwarder(name string, url string, logger log.Logger) (*Forwarder, error) {
+func CreateServiceForwarder(name string, url string, logger *zap.Logger) (*Forwarder, error) {
 	sock, err := client.CreatePushSocket(url)
 	if err != nil {
 		return nil, err
 	}
-
+	logger = logger.With(zap.String("forwarder", name))
 	quit := make(chan struct{})
 
 	forwarder := &Forwarder{
@@ -54,7 +53,7 @@ func CreateServiceForwarder(name string, url string, logger log.Logger) (*Forwar
 		LastAlive:  time.Now(),
 		sock:       sock,
 		stopTicker: quit,
-		logger:     log.WithPrefix(logger, "forwarder", name),
+		logger:     logger,
 	}
 	ticker := time.NewTicker(5 * time.Second)
 	message := &wrp.Message{Type: wrp.ServiceAliveMessageType}
@@ -71,16 +70,16 @@ func CreateServiceForwarder(name string, url string, logger log.Logger) (*Forwar
 		}
 	}()
 	sock.SetPipeEventHook(func(event mangos.PipeEvent, pipe mangos.Pipe) {
-		logging.Info(logger).Log(logging.MessageKey(), fmt.Sprintf("%s push socket event", name), "event", event, "pipe", pipe)
+		logger.Info(fmt.Sprintf("%s push socket event", name), zap.Any("event", event), zap.Any("pipe", pipe))
 	})
 	return forwarder, nil
 }
 
 func (forwarder *Forwarder) HandleMessage(message *wrp.Message) *wrp.Message {
-	logging.Debug(forwarder.logger).Log(logging.MessageKey(), "handling message", "wrp", *message)
+	forwarder.logger.Debug("handling message", zap.Any("wrp", *message))
 	err := client.SendMessage(forwarder.sock, *message)
 	if err != nil {
-		logging.Error(forwarder.logger).Log(logging.MessageKey(), "failed to send message", logging.ErrorKey(), err)
+		forwarder.logger.Error("failed to send message", zap.Error(err))
 		return kratos.CreateErrorWRP(message.TransactionUUID, message.Source, message.Destination, http.StatusServiceUnavailable, err)
 	}
 	return nil
@@ -90,6 +89,6 @@ func (forwarder *Forwarder) Close() {
 	forwarder.stopTicker <- struct{}{}
 	err := forwarder.sock.Close()
 	if err != nil {
-		logging.Error(forwarder.logger).Log(logging.MessageKey(), "failed to close socket", logging.ErrorKey(), err)
+		forwarder.logger.Error("failed to close socket", zap.Error(err))
 	}
 }

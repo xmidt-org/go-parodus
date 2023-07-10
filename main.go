@@ -23,8 +23,8 @@ import (
 	"runtime"
 
 	"github.com/spf13/pflag"
+	"github.com/xmidt-org/sallust"
 	"github.com/xmidt-org/themis/config"
-	"github.com/xmidt-org/themis/xlog"
 	"go.uber.org/fx"
 )
 
@@ -40,14 +40,14 @@ var (
 
 func main() {
 	app := fx.New(
-		xlog.Logger(),
+		sallust.WithLogger(),
 		config.CommandLine{Name: applicationName}.Provide(SetupFlagSet),
 		fx.Provide(
 			ProvideVersionPrintFunc,
 			Provide,
 			config.ProvideViper(),
-			xlog.Unmarshal("log"),
 			StartUpstreamConnection,
+			//TODO: add func for log
 		),
 		fx.Invoke(
 			StartParodus,
