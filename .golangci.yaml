@@ -26,4 +26,3 @@ linters-settings:
     errorf: false
   misspell:
     locale: US
-    
